@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Screenshot 2025-10-22 140606.png" />
+    <title>Truth Detector AI - Detect Fake News</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding-top: 100px; /* Account for fixed navbar */
+            animation: pageFadeIn 0.6s ease-out;
+        }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .navbar {
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-container">
+                    <img src="Screenshot 2025-10-22 140606.png" alt="Truth Detector Logo">
+                </div>
+                <div class="title-container">
+                    <h2>Truth Detector</h2>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+            </div>
+            <div class="nav-buttons" id="navButtons">
+                <a class="btn-outline" href="login.html" id="loginBtn">Login</a>
+                <a class="btn-primary" href="signup.html">Sign Up</a>
+                <a class="btn-primary" href="login.html">Get Started</a>
+            </div>
+            <div class="nav-user" id="navUser" style="display: none;">
+                <div class="profile-container">
+                    <div class="profile-icon" id="profileIcon">
+                        <span id="profileInitial"></span>
+                    </div>
+                    <span id="userName"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Detect Fake News with AI Precision</h1>
+            <p class="hero-description">
+                Empower yourself in the digital age. Truth Detector AI uses advanced machine learning to analyze
+                articles,
+                verify sources, and uncover the truth behind the headlines.
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <span class="hero-feature-icon">⚡</span>
+                    <span>Instant Results</span>
+                </div>
+                <div class="hero-feature">
+                    <span class="hero-feature-icon">🎯</span>
+                    <span>99% Accuracy</span>
+                </div>
+                <div class="hero-feature">
+                    <span class="hero-feature-icon">🔒</span>
+                    <span>Privacy First</span>
+                </div>
+            </div>
+            <button class="btn-cta" id="startDetectingBtn">Start Detecting Now</button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Truth Detector AI?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>Advanced machine learning algorithms analyze text patterns, sentiment, and credibility
+                        indicators.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-Time Detection</h3>
+                    <p>Get instant results with our fast and accurate fake news detection system.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Source Verification</h3>
+                    <p>Comprehensive analysis of article sources, publication history, and credibility factors.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="statistics">
+        <div class="container">
+            <h2 class="section-title">Our Impact in Numbers</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Articles Analyzed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Accuracy Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Trusted Users</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Paste Article</h3>
+                    <p>Copy and paste the news article you want to verify</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Analysis</h3>
+                    <p>Our AI analyzes the text for patterns and credibility indicators</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Results</h3>
+                    <p>Receive an instant verdict on the article's authenticity</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile App Promotion Section -->
+    <section class="mobile-app">
+        <div class="container">
+            <div class="app-content">
+                <div class="app-text">
+                    <h2 class="section-title">Detect Fake News On The Go</h2>
+                    <p class="app-description">
+                        Download our mobile app for instant fake news detection anywhere, anytime.
+                        Scan articles, check social media posts, and stay informed with AI-powered accuracy.
+                    </p>
+                    <div class="app-features">
+                        <div class="app-feature">
+                            <span class="feature-icon">📱</span>
+                            <span>Real-time scanning</span>
+                        </div>
+                        <div class="app-feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Instant results</span>
+                        </div>
+                        <div class="app-feature">
+                            <span class="feature-icon">🔒</span>
+                            <span>Privacy focused</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-stores-container">
+                <div class="app-stores">
+                    <a href="#" class="app-store-btn apple-store">
+                        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                            alt="Download on the App Store">
+                    </a>
+                    <a href="#" class="app-store-btn google-play">
+                        <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                            alt="Get it on Google Play">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="navigation-interceptor.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Scroll animation observer
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe sections for scroll animations
+            const sectionsToAnimate = document.querySelectorAll('.features, .statistics, .how-it-works, .mobile-app');
+            sectionsToAnimate.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Function to show logged out state
+            function showLoggedOutState() {
+                document.getElementById('navButtons').style.display = 'flex';
+                document.getElementById('navUser').style.display = 'none';
+            }
+
+            // Function to show logged in state
+            function showLoggedInState(userData, avatarSrc = null) {
+                document.getElementById('navButtons').style.display = 'none';
+                document.getElementById('navUser').style.display = 'flex';
+                document.getElementById('userName').textContent = `Hello, ${userData.name}`;
+                document.getElementById('profileInitial').textContent = userData.name.charAt(0).toUpperCase();
+                
+                if (avatarSrc) {
+                    updateNavigationAvatar(avatarSrc);
+                }
+            }
+
+            // Check if this is a logout redirect - if so, ensure clean state
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('logout')) {
+                // Clear any residual data
+                localStorage.clear();
+                // Remove logout parameter from URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // Check for logged in user from localStorage first
+            const token = localStorage.getItem('vn_token');
+            const user = localStorage.getItem('vn_user');
+            
+            if (token && user) {
+                try {
+                    const userData = JSON.parse(user);
+                    // Load and display avatar if available
+                    const savedAvatar = localStorage.getItem('vn_avatar');
+                    showLoggedInState(userData, savedAvatar);
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    showLoggedOutState();
+                }
+            } else if (token) {
+                // Check session on page load if token exists but no user data
+                try {
+                    const response = await fetch('/api/check-session', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    if (data.valid && data.user) {
+                        // Store user data in localStorage
+                        localStorage.setItem('vn_user', JSON.stringify(data.user));
+                        
+                        // Initialize user stats if they don't exist
+                        if (!localStorage.getItem('vn_user_stats')) {
+                          const initialStats = {
+                            totalAnalyses: 0,
+                            accuracyScore: 0,
+                            currentStreak: 0,
+                            lastAnalysisDate: null,
+                            totalConfidence: 0
+                          };
+                          localStorage.setItem('vn_user_stats', JSON.stringify(initialStats));
+                        }
+                        
+                        // Initialize achievements if they don't exist
+                        if (!localStorage.getItem('vn_achievements')) {
+                          const initialAchievements = {
+                            firstAnalysis: false,
+                            analyst: false,
+                            accuracyMaster: false,
+                            streakMaster: false,
+                            powerUser: false,
+                            expertAnalyst: false
+                          };
+                          localStorage.setItem('vn_achievements', JSON.stringify(initialAchievements));
+                        }
+                        
+                        // Show logged in state
+                        const savedAvatar = localStorage.getItem('vn_avatar');
+                        showLoggedInState(data.user, savedAvatar);
+                    } else {
+                        // Clear invalid token and show logged out state
+                        localStorage.removeItem('vn_token');
+                        localStorage.removeItem('vn_user');
+                        localStorage.removeItem('vn_email');
+                        showLoggedOutState();
+                    }
+                } catch (error) {
+                    console.error('Session check failed:', error);
+                    // On error, clear token and show logged out state
+                    localStorage.removeItem('vn_token');
+                    localStorage.removeItem('vn_user');
+                    localStorage.removeItem('vn_email');
+                    showLoggedOutState();
+                }
+            } else {
+                // No token - definitely logged out
+                showLoggedOutState();
+            }
+
+            // Profile container functionality - redirect to profile page
+            const profileContainer = document.querySelector('.profile-container');
+            if (profileContainer) {
+                profileContainer.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.navigateWithLoading) {
+                        window.navigateWithLoading('profile.html');
+                    } else {
+                        window.location.href = 'loading.html?target=profile.html';
+                    }
+                });
+            }
+
+            // Login button - navigation with loading
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (window.navigateWithLoading) {
+                    window.navigateWithLoading('login.html');
+                } else {
+                    window.location.href = 'loading.html?target=login.html';
+                }
+            });
+
+            // Start Detecting button functionality
+            const startDetectingBtn = document.getElementById('startDetectingBtn');
+            startDetectingBtn.addEventListener('click', () => {
+                // Check if user is logged in
+                const token = localStorage.getItem('vn_token');
+                const user = localStorage.getItem('vn_user');
+                
+                // If logged in, go to detection page, otherwise go to login
+                const targetPage = (token && user) ? 'simple_detect.html' : 'login.html';
+                
+                if (window.navigateWithLoading) {
+                    window.navigateWithLoading(targetPage);
+                } else {
+                    window.location.href = `loading.html?target=${targetPage}`;
+                }
+            });
+
+            // Function to update navigation avatar (shared with profile page)
+            function updateNavigationAvatar(avatarSrc) {
+                const navProfileIcon = document.getElementById('profileIcon');
+                const navProfileInitial = document.getElementById('profileInitial');
+
+                if (avatarSrc) {
+                    // Show avatar image as background in navigation
+                    navProfileIcon.style.backgroundImage = `url(${avatarSrc})`;
+                    navProfileIcon.style.backgroundSize = 'cover';
+                    navProfileIcon.style.backgroundPosition = 'center';
+                    navProfileIcon.style.backgroundRepeat = 'no-repeat';
+                    navProfileInitial.style.display = 'none';
+                    navProfileIcon.classList.add('has-avatar');
+                } else {
+                    // Show initial in navigation
+                    navProfileIcon.style.backgroundImage = 'none';
+                    navProfileInitial.style.display = 'block';
+                    navProfileInitial.textContent = userData ? userData.name.charAt(0).toUpperCase() : '';
+                    navProfileIcon.classList.remove('has-avatar');
+                }
+            }
+
+            // Make function globally available
+            window.updateNavigationAvatar = updateNavigationAvatar;
+
+        });
+    </script>
+</body>
+
+</html>

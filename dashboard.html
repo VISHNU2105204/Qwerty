@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Screenshot 2025-10-22 140606.png" />
+    <title>Dashboard - Truth Detector AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* User-Friendly Dashboard Design */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .profile-header {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .user-details h1 {
+            font-size: 1.4rem;
+            margin-bottom: 0.25rem;
+            color: #1f2937;
+        }
+
+        .user-details p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .header-actions .btn {
+            background: #f1f5f9;
+            color: #4f46e5;
+            border: 1px solid #e2e8f0;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .header-actions .btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        /* Section Styles */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .section-header .btn {
+            background: #f1f5f9;
+            color: #4f46e5;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .section-header .btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        /* Dashboard Specific Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: #1f2937;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .activity-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .activity-icon {
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-meta {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .activity-result {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .activity-result.real {
+            background: rgba(16, 185, 129, 0.1);
+            color: #065f46;
+        }
+
+        .activity-result.fake {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <h1 id="userName">User Name</h1>
+                    <p id="userEmail">user@example.com</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn" id="logoutBtn">
+                    <i>🚪</i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🔍</div>
+                    <div class="stat-value" id="totalAnalyses">0</div>
+                    <div class="stat-label">Total Analyses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value" id="accuracyScore">0%</div>
+                    <div class="stat-label">Accuracy Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="currentStreak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" id="unlockedAchievements">0</div>
+                    <div class="stat-label">Achievements</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2>Recent Activity</h2>
+                    <button class="btn" id="clearHistoryBtn">Clear History</button>
+                </div>
+                <div class="activity-list" id="recentActivity">
+                    <div class="activity-item">
+                        <div class="activity-icon">🔍</div>
+                        <div class="activity-content">
+                            <div class="activity-title">No recent activity</div>
+                            <div class="activity-meta">Start analyzing articles to see your activity here</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data
+            loadUserData();
+            
+            // Load stats
+            loadStats();
+            
+            // Load recent activity
+            loadRecentActivity();
+            
+            // Button handlers
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            document.getElementById('clearHistoryBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear your recent activity?')) {
+                    localStorage.removeItem('vn_activities');
+                    loadRecentActivity();
+                    alert('History cleared successfully!');
+                }
+            });
+        });
+        
+        function loadUserData() {
+            // Load user data from localStorage
+            const user = JSON.parse(localStorage.getItem('vn_user')) || { name: 'User Name', email: 'user@example.com' };
+            
+            // Update header
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+        }
+        
+        function loadStats() {
+            // Load stats from localStorage
+            const stats = JSON.parse(localStorage.getItem('vn_user_stats')) || {
+                totalAnalyses: 0,
+                accuracyScore: 0,
+                currentStreak: 0
+            };
+            
+            const achievements = JSON.parse(localStorage.getItem('vn_achievements')) || {};
+            const unlockedCount = Object.values(achievements).filter(Boolean).length;
+            
+            // Update stats
+            document.getElementById('totalAnalyses').textContent = stats.totalAnalyses;
+            document.getElementById('accuracyScore').textContent = stats.accuracyScore + '%';
+            document.getElementById('currentStreak').textContent = stats.currentStreak;
+            document.getElementById('unlockedAchievements').textContent = unlockedCount;
+        }
+        
+        function loadRecentActivity() {
+            // Load recent activity
+            const activities = JSON.parse(localStorage.getItem('vn_activities')) || [];
+            const recentActivity = activities.slice(0, 5); // Show only last 5
+            
+            const container = document.getElementById('recentActivity');
+            container.innerHTML = '';
+            
+            if (recentActivity.length === 0) {
+                container.innerHTML = `
+                    <div class="activity-item">
+                        <div class="activity-icon">🔍</div>
+                        <div class="activity-content">
+                            <div class="activity-title">No recent activity</div>
+                            <div class="activity-meta">Start analyzing articles to see your activity here</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            recentActivity.forEach(activity => {
+                const item = document.createElement('div');
+                item.className = 'activity-item';
+                item.innerHTML = `
+                    <div class="activity-icon">🔍</div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-meta">${activity.time}${activity.confidence ? ` • ${activity.confidence}% confidence` : ''}</div>
+                    </div>
+                    <div class="activity-result ${activity.result || (activity.isReal ? 'real' : 'fake')}">
+                        ${(activity.result || (activity.isReal ? 'REAL' : 'FAKE')).toUpperCase()}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>

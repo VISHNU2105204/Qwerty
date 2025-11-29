@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Screenshot 2025-10-22 140606.png" />
+    <title>Truth Detector - AI-Powered Fact Verification</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Page Entrance Animation */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        body {
+            animation: pageFadeIn 0.6s ease-out;
+        }
+
+        /* Floating Window Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 0 auto;
+            overflow: hidden;
+            box-sizing: border-box;
+            animation: slideDownNav 0.8s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes slideDownNav {
+            from {
+                transform: translateX(-50%) translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .navbar:hover {
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+            min-width: 0;
+        }
+
+        .logo-container {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .title-container {
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .title-container h2 {
+            margin: 0;
+            color: #6366f1;
+            font-size: 1.5rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            min-width: 0;
+            padding: 0 1rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #6366f1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-shrink: 0;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .nav-buttons .btn-primary,
+        .nav-buttons .btn-outline {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .nav-buttons .btn-primary {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .nav-buttons .btn-primary:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-buttons .btn-outline {
+            background: transparent;
+            color: #6366f1;
+            border-color: #6366f1;
+        }
+
+        .nav-buttons .btn-outline:hover {
+            background: #6366f1;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-user {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-shrink: 0;
+            min-width: 0;
+        }
+
+        .nav-user span {
+            color: #333;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+            min-width: 0;
+        }
+
+        .profile-container:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .profile-icon:not(.has-avatar) {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        /* Logo Styles */
+        .nav-logo img {
+            height: 40px;
+            width: auto;
+            max-width: 100%;
+            transition: all 0.3s ease;
+            object-fit: contain;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                padding: 0 0.75rem;
+                justify-content: space-between;
+            }
+
+            .nav-logo {
+                gap: 0.4rem;
+                flex-shrink: 0;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .logo-container {
+                width: 32px;
+                height: 32px;
+            }
+
+            .nav-logo img {
+                height: 32px;
+            }
+
+            .title-container h2 {
+                font-size: 1.2rem;
+            }
+
+            .nav-buttons {
+                gap: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            .nav-buttons .btn-primary,
+            .nav-buttons .btn-outline {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .nav-user {
+                flex-shrink: 0;
+            }
+
+            .nav-user span {
+                max-width: 100px;
+                font-size: 0.85rem;
+            }
+
+            .profile-container {
+                padding: 0.3rem;
+            }
+
+            .profile-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.5rem 0.5rem;
+            }
+
+            .nav-container {
+                padding: 0 0.5rem;
+                gap: 0.4rem;
+            }
+
+            .nav-logo {
+                gap: 0.3rem;
+            }
+
+            .logo-container {
+                width: 28px;
+                height: 28px;
+            }
+
+            .nav-logo img {
+                height: 28px;
+            }
+
+            .title-container h2 {
+                font-size: 1rem;
+            }
+
+            .nav-user span {
+                max-width: 80px;
+                font-size: 0.75rem;
+            }
+
+            .nav-buttons {
+                gap: 0.3rem;
+            }
+
+            .nav-buttons .btn-primary,
+            .nav-buttons .btn-outline {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Additional styles for Truth Detector page */
+        body {
+            padding-top: 100px; /* Account for fixed navbar */
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .truth-detector-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .truth-detector-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: floatBackground 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floatBackground {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .header-logo .logo-container {
+            flex-shrink: 0;
+        }
+
+        .header-logo .logo-container img {
+            height: 60px;
+            width: auto;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-logo .title-container h1 {
+            margin: 0;
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                text-shadow: 0 4px 30px rgba(255, 255, 255, 0.3), 0 0 40px rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .truth-detector-header .badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1f2937;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+            animation: fadeInUp 0.8s ease-out 0.4s both, pulse 2s ease-in-out infinite 1s;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .truth-detector-header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .input-section {
+            padding: 3rem 0;
+            background: transparent;
+            position: relative;
+        }
+
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInUp 0.8s ease-out 0.8s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .input-container:hover::before {
+            left: 100%;
+        }
+
+        .input-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 25px 70px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-container input[type="url"] {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-container input[type="url"]:hover {
+            border-color: #c7d2fe;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-container input[type="url"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 
+                0 0 0 4px rgba(59, 130, 246, 0.15),
+                0 4px 16px rgba(59, 130, 246, 0.2);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .input-container textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-container textarea:hover {
+            border-color: #c7d2fe;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-container textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 
+                0 0 0 4px rgba(59, 130, 246, 0.15),
+                0 4px 16px rgba(59, 130, 246, 0.2);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb, #1d4ed8);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 1.25rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+            animation: gradientMove 3s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .analyze-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .analyze-btn:hover::before {
+            left: 100%;
+        }
+
+        .analyze-btn:hover {
+            background-position: 100% 50%;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+        }
+
+        .analyze-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .analyze-btn:disabled {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .how-it-works-section {
+            padding: 4rem 0;
+            background: transparent;
+            position: relative;
+        }
+
+        .how-it-works-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInUp 0.8s ease-out 1s forwards;
+        }
+
+        .how-it-works-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #1f2937, #3b82f6, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientText 3s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .how-it-works-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .how-it-works-content li {
+            padding: 0.75rem 0;
+            font-size: 1.1rem;
+            color: #4b5563;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInLeft 0.5s ease-out forwards;
+        }
+
+        .how-it-works-content li:nth-child(1) { animation-delay: 1.2s; }
+        .how-it-works-content li:nth-child(2) { animation-delay: 1.4s; }
+        .how-it-works-content li:nth-child(3) { animation-delay: 1.6s; }
+        .how-it-works-content li:nth-child(4) { animation-delay: 1.8s; }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: #92400e;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+            animation: fadeInUp 0.6s ease-out 2s both;
+            transition: all 0.3s ease;
+        }
+
+        .warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .result-section {
+            display: none;
+            padding: 3rem 0;
+            background: transparent;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .result-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 3px solid #10b981;
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 
+                0 20px 60px rgba(16, 185, 129, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+            animation: resultSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes resultSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: iconBounce 0.8s ease-out, pulse 2s ease-in-out infinite 1s;
+            display: inline-block;
+        }
+
+        @keyframes iconBounce {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .result-card h3 {
+            font-size: 2.5rem;
+            color: #065f46;
+            margin-bottom: 0.5rem;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+            font-weight: 700;
+        }
+
+        .confidence {
+            font-size: 1.4rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .important-notice {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+            color: #92400e;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+            transition: all 0.3s ease;
+        }
+
+        .important-notice:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Add styles for history section and buttons */
+        .history-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
+                        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .history-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15),
+                        0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .history-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .history-actions .btn-outline {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            background: rgba(249, 250, 251, 0.8);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            background: rgba(249, 250, 251, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .history-item.real {
+            border-left: 4px solid #10b981;
+        }
+
+        .history-item.fake {
+            border-left: 4px solid #ef4444;
+        }
+
+        .history-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .history-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .history-title-text {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-meta {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .history-result {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            margin-left: 1rem;
+            flex-shrink: 0;
+        }
+
+        .history-result.real {
+            background: rgba(16, 185, 129, 0.1);
+            color: #065f46;
+        }
+
+        .history-result.fake {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
+        .history-delete {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-left: 0.5rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .history-delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        .history-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Scrollbar styling for history list */
+        .history-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .history-list::-webkit-scrollbar-track {
+            background: rgba(249, 250, 251, 0.5);
+            border-radius: 4px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 4px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        }
+
+        /* Modal for showing full article */
+        .article-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .article-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .article-modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .article-modal.active .article-modal-content {
+            transform: translateY(0);
+        }
+
+        .article-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .article-modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #1f2937;
+        }
+
+        .article-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .article-modal-close:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .article-modal-body {
+            padding: 1.5rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .article-info {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-info-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .article-text {
+            line-height: 1.7;
+            color: #374151;
+            white-space: pre-wrap;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .history-section {
+                padding: 1.5rem;
+            }
+            
+            .history-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .history-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .history-content {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .history-meta {
+                font-size: 0.8rem;
+            }
+            
+            .history-result {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-container">
+                    <img src="Screenshot 2025-10-22 140606.png" alt="Truth Detector Logo">
+                </div>
+                <div class="title-container">
+                    <h2>Truth Detector</h2>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="#how-it-works-section" class="nav-link">How It Works</a>
+            </div>
+            <div class="nav-buttons" id="navButtons">
+                <a class="btn-outline" href="loading.html?target=login.html">Login</a>
+                <a class="btn-primary" href="loading.html?target=signup.html">Sign Up</a>
+            </div>
+            <div class="nav-user" id="navUser" style="display: none;">
+                <div class="profile-container">
+                    <div class="profile-icon" id="profileIcon">
+                        <span id="profileInitial"></span>
+                    </div>
+                    <span id="userName"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Truth Detector Header -->
+    <section class="truth-detector-header">
+        <div class="container">
+            <div class="header-logo">
+                <div class="logo-container">
+                    <img src="Screenshot 2025-10-22 140606.png" alt="Truth Detector Logo">
+                </div>
+                <div class="title-container">
+                    <h1>Truth Detector</h1>
+                </div>
+            </div>
+            <div class="badge">AI-Powered Fact Verification</div>
+            <p>Advanced AI technology to help identify misinformation and verify news authenticity. Paste any news article below for instant analysis.</p>
+        </div>
+    </section>
+
+    <!-- Input Section -->
+    <section class="input-section">
+        <div class="container">
+            <div class="input-container">
+                <h2 style="text-align: center; margin-bottom: 1.5rem; color: #1f2937;">Enter News Article</h2>
+                <div class="input-group">
+                    <label for="imageUrl">Image URL (optional)</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" />
+                </div>
+                <div class="input-group">
+                    <label for="newsInput">News Article Text</label>
+                    <textarea id="newsInput" placeholder="Paste the news article text here..." maxlength="5000"></textarea>
+                </div>
+                <div class="char-counter" id="charCounter">0 / 5000 characters</div>
+                <button class="analyze-btn" id="analyzeBtn">Analyze Article</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section">
+        <div class="container">
+            <div class="how-it-works-content">
+                <h2>How It Works</h2>
+                <p>Our AI-powered system analyzes news articles using advanced natural language processing and machine learning algorithms trained on extensive datasets of verified real and fake news.</p>
+                <p>The system evaluates multiple factors including:</p>
+                <ul>
+                    <li>Language patterns and writing style</li>
+                    <li>Sentiment and emotional manipulation indicators</li>
+                    <li>Source credibility signals</li>
+                    <li>Factual consistency and logical coherence</li>
+                </ul>
+                <div class="warning">
+                    Remember: No automated system is perfect. Critical thinking and verification from trusted sources remain essential.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Section (to be added after the How It Works section) -->
+    <section class="history-section" id="historySection" style="display: none;">
+        <div class="history-header">
+            <h3 class="history-title">Analysis History</h3>
+            <div class="history-actions">
+                <button class="btn-outline" id="clearHistoryBtn">Clear History</button>
+            </div>
+        </div>
+        <div class="history-list" id="historyList">
+            <!-- History items will be populated here -->
+        </div>
+    </section>
+
+    <!-- Analysis Result Section -->
+    <section class="result-section" id="resultSection">
+        <div class="container">
+            <div class="result-card">
+                <div class="result-icon">✅</div>
+                <h3>Appears Authentic</h3>
+                <div class="confidence">Confidence: 99.9%</div>
+                <div class="important-notice">
+                    <strong>Important Notice:</strong><br>
+                    This analysis is provided by AI and should not be considered as absolute truth. Always verify information from multiple reliable sources. The accuracy of detection depends on various factors including article length, writing style, and context.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="navigation-interceptor.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Character counter
+            const newsInput = document.getElementById('newsInput');
+            const charCounter = document.getElementById('charCounter');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const resultSection = document.getElementById('resultSection');
+
+            // Function to validate if text contains valid sentences
+            function isValidSentence(text) {
+                // Trim whitespace
+                const trimmedText = text.trim();
+                
+                // Check if text is empty
+                if (!trimmedText) return false;
+                
+                // Check minimum length (at least 10 characters)
+                if (trimmedText.length < 10) return false;
+                
+                // Check for reasonable word count (at least 3 words)
+                const words = trimmedText.split(/\s+/);
+                if (words.length < 3) return false;
+                
+                // Check for excessive repetition (possible spam)
+                const wordFrequency = {};
+                for (let word of words) {
+                    const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
+                    if (cleanWord) {
+                        wordFrequency[cleanWord] = (wordFrequency[cleanWord] || 0) + 1;
+                        // If any word appears more than 50% of the time, likely spam
+                        if (wordFrequency[cleanWord] > words.length * 0.5) return false;
+                    }
+                }
+                
+                // Check for excessive special characters (possible spam)
+                const specialCharRatio = (trimmedText.match(/[^a-zA-Z0-9\s.!?,'"-]/g) || []).length / trimmedText.length;
+                if (specialCharRatio > 0.1) return false; // More than 10% special characters
+                
+                return true;
+            }
+
+            newsInput.addEventListener('input', () => {
+                const count = newsInput.value.length;
+                charCounter.textContent = `${count} / 5000 characters`;
+                
+                // Real-time validation feedback
+                if (newsInput.value.trim()) {
+                    if (isValidSentence(newsInput.value)) {
+                        charCounter.style.color = '#10b981'; // Green for valid
+                    } else {
+                        charCounter.style.color = '#f59e0b'; // Orange for needs improvement
+                    }
+                } else {
+                    charCounter.style.color = '#6b7280'; // Gray for empty
+                }
+            });
+
+            // Analyze button functionality
+            analyzeBtn.addEventListener('click', () => {
+                const text = newsInput.value.trim();
+                const imageUrl = document.getElementById('imageUrl').value.trim();
+
+                // Validate input
+                if (!text && !imageUrl) {
+                    alert('Please enter some text or provide an image URL to analyze.');
+                    return;
+                }
+
+                // If text is provided, validate it's a proper sentence
+                if (text) {
+                    // Check if text contains at least one complete sentence
+                    if (!isValidSentence(text)) {
+                        alert('Please enter valid sentences with proper punctuation. The text should contain at least one complete sentence with proper capitalization and punctuation.');
+                        return;
+                    }
+                }
+
+                // Simulate analysis delay
+                analyzeBtn.disabled = true;
+                analyzeBtn.textContent = 'Analyzing...';
+
+                // Prepare data to send to backend
+                const data = {
+                    text: text,
+                    image_url: imageUrl
+                };
+
+                // Get auth token if logged in
+                const token = localStorage.getItem('vn_token');
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                // Simulate API call (replace with actual fetch to backend)
+                fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    // Update result display based on API response
+                    const resultIcon = resultSection.querySelector('.result-icon');
+                    const resultTitle = resultSection.querySelector('h3');
+                    const confidenceDiv = resultSection.querySelector('.confidence');
+
+                    if (result.prediction === 'real') {
+                        resultIcon.textContent = '✅';
+                        resultTitle.textContent = 'Appears Authentic';
+                        resultTitle.style.color = '#065f46';
+                        resultSection.querySelector('.result-card').style.borderColor = '#10b981';
+                    } else {
+                        resultIcon.textContent = '❌';
+                        resultTitle.textContent = 'Potentially Fake';
+                        resultTitle.style.color = '#dc2626';
+                        resultSection.querySelector('.result-card').style.borderColor = '#ef4444';
+                    }
+
+                    confidenceDiv.textContent = `Confidence: ${result.confidence}%`;
+
+                    // Show result section with animation
+                    resultSection.style.display = 'block';
+                    
+                    // Trigger animation by re-adding the animation class
+                    const resultCard = resultSection.querySelector('.result-card');
+                    resultCard.style.animation = 'none';
+                    setTimeout(() => {
+                        resultCard.style.animation = 'resultSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    }, 10);
+                    
+                    // Scroll to result smoothly
+                    setTimeout(() => {
+                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                    
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.textContent = 'Analyze Article';
+
+                    // Save activity to localStorage (for profile page)
+                    const activityText = text.length > 50 ? text.substring(0, 50) + '...' : text;
+                    const activityTitle = `Analyzed: ${activityText}`;
+                    const activityResult = result.prediction; // 'real' or 'fake'
+                    
+                    // Get existing activities
+                    const savedActivities = localStorage.getItem('vn_activities');
+                    const activities = savedActivities ? JSON.parse(savedActivities) : [];
+                    
+                    // Add new activity with full article text
+                    const newActivity = {
+                        type: 'analysis',
+                        title: activityTitle,
+                        fullText: text, // Store full article text
+                        result: activityResult,
+                        time: 'Just now',
+                        timestamp: Date.now(),
+                        confidence: result.confidence,
+                        isReal: result.isReal || (activityResult === 'real')
+                    };
+                    
+                    // Add to beginning of array
+                    activities.unshift(newActivity);
+                    
+                    // Keep only last 50 activities
+                    if (activities.length > 50) {
+                        activities.splice(50);
+                    }
+                    
+                    // Save to localStorage
+                    localStorage.setItem('vn_activities', JSON.stringify(activities));
+
+                    // Update user stats and achievements if logged in
+                    const user = localStorage.getItem('vn_user');
+                    if (token && user) {
+                        // Add activity to timeline (if function exists from profile page)
+                        if (window.addActivity) {
+                            window.addActivity('analysis', activityTitle, activityResult);
+                        }
+
+                        // Update user stats
+                        if (window.updateUserStats) {
+                            window.updateUserStats(result.prediction, result.confidence);
+                        }
+
+                        // Update stats and check achievements
+                        const updatedStats = updateUserStats(result.prediction, result.confidence);
+                        checkAndUnlockAchievements(updatedStats);
+                    }
+
+                    // Refresh history display
+                    loadHistory();
+                })
+                .catch(error => {
+                    console.error('Analysis failed:', error);
+                    alert('Analysis failed. Please try again.');
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.textContent = 'Analyze Article';
+                });
+            });
+
+            // Check for logged in user (same as before)
+            const token = localStorage.getItem('vn_token');
+            const user = localStorage.getItem('vn_user');
+            if (token && user) {
+                const userData = JSON.parse(user);
+                document.getElementById('navButtons').style.display = 'none';
+                document.getElementById('navUser').style.display = 'flex';
+                document.getElementById('userName').textContent = `Hello, ${userData.name}`;
+                document.getElementById('profileInitial').textContent = userData.name.charAt(0).toUpperCase();
+
+                // Load and display avatar if available
+                const savedAvatar = localStorage.getItem('vn_avatar');
+                if (savedAvatar) {
+                    updateNavigationAvatar(savedAvatar);
+                }
+            } else if (token) {
+                fetch('/api/check-session', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.valid) {
+                        document.getElementById('navButtons').style.display = 'none';
+                        document.getElementById('navUser').style.display = 'flex';
+                        document.getElementById('userName').textContent = `Hello, ${data.user.name}`;
+                        document.getElementById('profileInitial').textContent = data.user.name.charAt(0).toUpperCase();
+
+                        // Load and display avatar if available
+                        const savedAvatar = localStorage.getItem('vn_avatar');
+                        if (savedAvatar) {
+                            updateNavigationAvatar(savedAvatar);
+                        }
+                    } else {
+                        localStorage.removeItem('vn_token');
+                        localStorage.removeItem('vn_user');
+                        localStorage.removeItem('vn_email');
+                    }
+                })
+                .catch(error => console.error('Session check failed:', error));
+            }
+
+            // Profile container functionality - redirect to profile page
+            const profileContainer = document.querySelector('.profile-container');
+            if (profileContainer) {
+                profileContainer.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.navigateWithLoading) {
+                        window.navigateWithLoading('profile.html');
+                    } else {
+                        window.location.href = 'loading.html?target=profile.html';
+                    }
+                });
+            }
+
+            // Function to update navigation avatar (shared with profile page)
+            function updateNavigationAvatar(avatarSrc) {
+                const navProfileIcon = document.getElementById('profileIcon');
+                const navProfileInitial = document.getElementById('profileInitial');
+
+                if (avatarSrc) {
+                    // Show avatar image as background in navigation
+                    navProfileIcon.style.backgroundImage = `url(${avatarSrc})`;
+                    navProfileIcon.style.backgroundSize = 'cover';
+                    navProfileIcon.style.backgroundPosition = 'center';
+                    navProfileIcon.style.backgroundRepeat = 'no-repeat';
+                    navProfileInitial.style.display = 'none';
+                    navProfileIcon.classList.add('has-avatar');
+                } else {
+                    // Show initial in navigation
+                    navProfileIcon.style.backgroundImage = 'none';
+                    navProfileInitial.style.display = 'block';
+                    navProfileInitial.textContent = userData ? userData.name.charAt(0).toUpperCase() : '';
+                    navProfileIcon.classList.remove('has-avatar');
+                }
+            }
+
+            // Make function globally available
+            window.updateNavigationAvatar = updateNavigationAvatar;
+
+            // Add history functionality
+            const historySection = document.getElementById('historySection');
+            const historyList = document.getElementById('historyList');
+            const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+            // Load and display history
+            function loadHistory() {
+                const savedActivities = localStorage.getItem('vn_activities');
+                const activities = savedActivities ? JSON.parse(savedActivities) : [];
+                
+                if (activities.length > 0) {
+                    historySection.style.display = 'block';
+                    displayHistory(activities);
+                } else {
+                    historySection.style.display = 'none';
+                }
+            }
+
+            // Display history items
+            function displayHistory(activities) {
+                historyList.innerHTML = '';
+                
+                if (activities.length === 0) {
+                    historyList.innerHTML = `
+                        <div class="history-empty">
+                            <div class="history-empty-icon">📝</div>
+                            <div class="history-empty-text">No analysis history</div>
+                            <div class="history-empty-desc">Your analyzed articles will appear here</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                activities.forEach((activity, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = `history-item ${activity.result || (activity.isReal ? 'real' : 'fake')}`;
+                    historyItem.dataset.index = index;
+                    
+                    const resultText = activity.result ? activity.result.toUpperCase() : (activity.isReal ? 'REAL' : 'FAKE');
+                    const resultClass = activity.result || (activity.isReal ? 'real' : 'fake');
+                    
+                    historyItem.innerHTML = `
+                        <div class="history-icon">🔍</div>
+                        <div class="history-content">
+                            <div class="history-title-text">${activity.title}</div>
+                            <div class="history-meta">${activity.time}${activity.confidence ? ` • ${activity.confidence}% confidence` : ''}</div>
+                        </div>
+                        <div class="history-result ${resultClass}">${resultText}</div>
+                        <button class="history-delete" title="Delete this analysis">🗑️</button>
+                    `;
+                    
+                    // Add click handler to show full article
+                    historyItem.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('history-delete')) {
+                            showArticleModal(activity);
+                        }
+                    });
+                    
+                    // Add delete handler
+                    const deleteBtn = historyItem.querySelector('.history-delete');
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeHistoryItem(index);
+                    });
+                    
+                    historyList.appendChild(historyItem);
+                });
+            }
+
+            // Remove a single history item
+            function removeHistoryItem(index) {
+                if (confirm('Are you sure you want to delete this analysis?')) {
+                    const savedActivities = localStorage.getItem('vn_activities');
+                    const activities = savedActivities ? JSON.parse(savedActivities) : [];
+                    
+                    // Remove the item at the specified index
+                    activities.splice(index, 1);
+                    
+                    // Save updated activities
+                    localStorage.setItem('vn_activities', JSON.stringify(activities));
+                    
+                    // Reload history display
+                    loadHistory();
+                    
+                    // Show success message
+                    showSuccessMessage('Analysis deleted successfully!');
+                }
+            }
+
+            // Clear entire history
+            clearHistoryBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear your entire analysis history? This action cannot be undone.')) {
+                    localStorage.removeItem('vn_activities');
+                    loadHistory();
+                    showSuccessMessage('Analysis history cleared successfully!');
+                }
+            });
+
+            // Show article modal
+            function showArticleModal(activity) {
+                // Create modal if it doesn't exist
+                let modal = document.getElementById('articleModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'articleModal';
+                    modal.className = 'article-modal';
+                    modal.innerHTML = `
+                        <div class="article-modal-content">
+                            <div class="article-modal-header">
+                                <h3>📰 Analyzed Article</h3>
+                                <button class="article-modal-close" id="articleModalClose">×</button>
+                            </div>
+                            <div class="article-modal-body">
+                                <div class="article-info">
+                                    <div class="article-info-badge ${activity.result || (activity.isReal ? 'real' : 'fake')}">
+                                        ${(activity.result || (activity.isReal ? 'REAL' : 'FAKE')).toUpperCase()}
+                                    </div>
+                                    ${activity.confidence ? `<div class="article-info-badge" style="background: rgba(59, 130, 246, 0.1); color: #2563eb;">Confidence: ${activity.confidence}%</div>` : ''}
+                                    <div class="article-info-badge" style="background: rgba(107, 114, 128, 0.1); color: #4b5563;">${activity.time}</div>
+                                </div>
+                                <div class="article-text" id="articleModalText"></div>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                    
+                    // Add close event listeners
+                    document.getElementById('articleModalClose').addEventListener('click', closeArticleModal);
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            closeArticleModal();
+                        }
+                    });
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape' && modal.classList.contains('active')) {
+                            closeArticleModal();
+                        }
+                    });
+                }
+                
+                // Set article text
+                const articleText = activity.fullText || activity.text || 'Article text not available';
+                document.getElementById('articleModalText').textContent = articleText;
+                
+                // Show modal
+                modal.classList.add('active');
+            }
+
+            // Close article modal
+            function closeArticleModal() {
+                const modal = document.getElementById('articleModal');
+                if (modal) {
+                    modal.classList.remove('active');
+                }
+            }
+
+            // Show success message
+            function showSuccessMessage(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(45deg, #10b981, #059669);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+                    z-index: 1000;
+                    font-weight: 600;
+                    transform: translateX(150%);
+                    transition: transform 0.3s ease;
+                `;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                // Slide in
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(150%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            // Load history when page loads
+            loadHistory();
+
+            // Achievement and Stats Functions
+            function updateUserStats(prediction, confidence) {
+                // Get existing stats or create new ones
+                const stats = JSON.parse(localStorage.getItem('vn_user_stats')) || {
+                    totalAnalyses: 0,
+                    accuracyScore: 0,
+                    currentStreak: 0,
+                    lastAnalysisDate: null,
+                    totalConfidence: 0
+                };
+
+                // Update total analyses
+                stats.totalAnalyses = stats.totalAnalyses + 1;
+
+                // Update total confidence for accuracy calculation
+                stats.totalConfidence = (stats.totalConfidence || 0) + confidence;
+                stats.accuracyScore = Math.round(stats.totalConfidence / stats.totalAnalyses);
+
+                // Update streak
+                const today = new Date().toDateString();
+                const lastDate = stats.lastAnalysisDate;
+                
+                if (lastDate) {
+                    const lastAnalysis = new Date(lastDate).toDateString();
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const yesterdayStr = yesterday.toDateString();
+
+                    if (lastAnalysis === today) {
+                        // Same day, don't increment streak
+                    } else if (lastAnalysis === yesterdayStr) {
+                        // Consecutive day
+                        stats.currentStreak += 1;
+                    } else {
+                        // Streak broken, reset to 1
+                        stats.currentStreak = 1;
+                    }
+                } else {
+                    // First analysis
+                    stats.currentStreak = 1;
+                }
+
+                stats.lastAnalysisDate = today;
+
+                // Save updated stats
+                localStorage.setItem('vn_user_stats', JSON.stringify(stats));
+
+                return stats;
+            }
+
+            function checkAndUnlockAchievements(stats) {
+                const achievements = JSON.parse(localStorage.getItem('vn_achievements')) || {};
+                let newAchievements = [];
+
+                // Achievement 1: First Analysis
+                if (stats.totalAnalyses >= 1 && !achievements.firstAnalysis) {
+                    achievements.firstAnalysis = true;
+                    newAchievements.push({
+                        icon: '🔍',
+                        title: 'First Analysis',
+                        description: 'Complete your first analysis'
+                    });
+                }
+
+                // Achievement 2: Analyst (10 analyses)
+                if (stats.totalAnalyses >= 10 && !achievements.analyst) {
+                    achievements.analyst = true;
+                    newAchievements.push({
+                        icon: '📈',
+                        title: 'Analyst',
+                        description: 'Complete 10 analyses'
+                    });
+                }
+
+                // Achievement 3: Accuracy Master (90% accuracy)
+                if (stats.accuracyScore >= 90 && !achievements.accuracyMaster) {
+                    achievements.accuracyMaster = true;
+                    newAchievements.push({
+                        icon: '🎯',
+                        title: 'Accuracy Master',
+                        description: 'Achieve 90% accuracy'
+                    });
+                }
+
+                // Achievement 4: Streak Master (7-day streak)
+                if (stats.currentStreak >= 7 && !achievements.streakMaster) {
+                    achievements.streakMaster = true;
+                    newAchievements.push({
+                        icon: '🔥',
+                        title: 'Streak Master',
+                        description: '7-day analysis streak'
+                    });
+                }
+
+                // Achievement 5: Power User (50 analyses)
+                if (stats.totalAnalyses >= 50 && !achievements.powerUser) {
+                    achievements.powerUser = true;
+                    newAchievements.push({
+                        icon: '⚡',
+                        title: 'Power User',
+                        description: 'Complete 50 analyses'
+                    });
+                }
+
+                // Achievement 6: Expert Analyst (100 analyses)
+                if (stats.totalAnalyses >= 100 && !achievements.expertAnalyst) {
+                    achievements.expertAnalyst = true;
+                    newAchievements.push({
+                        icon: '🏆',
+                        title: 'Expert Analyst',
+                        description: 'Complete 100 analyses'
+                    });
+                }
+
+                // Save achievements
+                localStorage.setItem('vn_achievements', JSON.stringify(achievements));
+
+                // Show notifications for new achievements
+                newAchievements.forEach((achievement, index) => {
+                    setTimeout(() => {
+                        showAchievementNotification(achievement);
+                    }, index * 1000);
+                });
+
+                return newAchievements;
+            }
+
+            function showAchievementNotification(achievement) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+                    color: #1f2937;
+                    padding: 1.5rem;
+                    border-radius: 16px;
+                    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);
+                    z-index: 10000;
+                    min-width: 300px;
+                    transform: translateX(150%);
+                    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    border: 2px solid rgba(255, 255, 255, 0.5);
+                `;
+                
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 2.5rem;">${achievement.icon}</div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; opacity: 0.8; margin-bottom: 0.25rem;">🏆 Achievement Unlocked!</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">${achievement.title}</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;">${achievement.description}</div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Slide in
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                // Auto-dismiss after 5 seconds
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(150%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 400);
+                }, 5000);
+                
+                // Click to dismiss
+                notification.addEventListener('click', () => {
+                    notification.style.transform = 'translateX(150%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 400);
+                });
+            }
+
+        });
+    </script>
+</body>
+
+</html>

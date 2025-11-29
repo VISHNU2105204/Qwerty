@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="Screenshot 2025-10-22 140606.png" />
+  <title>Sign Up - Truth Detector AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Signup page specific styles - enhanced styles in styles.css */
+    body {
+      animation: pageFadeIn 0.6s ease-out;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      min-height: 100vh;
+    }
+    
+    .auth-card {
+      max-width: 500px;
+    }
+    
+    .auth-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 3s ease infinite;
+    }
+    
+    .auth-btn:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+    
+    .google-btn svg {
+      flex-shrink: 0;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check if user is already logged in
+      const token = localStorage.getItem('vn_token');
+      if (token) {
+        try {
+          const response = await fetch('/api/check-session', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (response.ok) {
+            // User is already logged in, redirect to home
+            if (window.navigateWithLoading) {
+              window.navigateWithLoading('index.html');
+            } else {
+              window.location.href = 'loading.html?target=index.html';
+            }
+            return;
+          } else {
+            // Token invalid, clear it
+            localStorage.removeItem('vn_token');
+            localStorage.removeItem('vn_user');
+          }
+        } catch (error) {
+          console.error('Session check error:', error);
+          // Clear invalid token
+          localStorage.removeItem('vn_token');
+          localStorage.removeItem('vn_user');
+        }
+      }
+
+      const form = document.getElementById('signupForm');
+      const submitBtn = document.querySelector('.auth-btn');
+      const originalBtnText = submitBtn.textContent;
+      const googleBtn = document.querySelector('.google-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirm = document.getElementById('confirm').value.trim();
+        if (!name || !email || !password || !confirm) { alert('Please fill in all fields.'); return; }
+        if (password !== confirm) { alert('Passwords do not match.'); return; }
+
+        // Show loading state
+        submitBtn.textContent = 'Creating account...';
+        submitBtn.disabled = true;
+
+        try {
+          const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // Store token and email in localStorage (user is auto-logged in after registration)
+            localStorage.setItem('vn_token', data.token);
+            localStorage.setItem('vn_email', email);
+            localStorage.setItem('vn_user', JSON.stringify(data.user));
+            
+            // Initialize user stats for new user
+            const initialStats = {
+              totalAnalyses: 0,
+              accuracyScore: 0,
+              currentStreak: 0,
+              lastAnalysisDate: null,
+              totalConfidence: 0
+            };
+            localStorage.setItem('vn_user_stats', JSON.stringify(initialStats));
+            
+            // Initialize achievements for new user
+            const initialAchievements = {
+              firstAnalysis: false,
+              analyst: false,
+              accuracyMaster: false,
+              streakMaster: false,
+              powerUser: false,
+              expertAnalyst: false
+            };
+            localStorage.setItem('vn_achievements', JSON.stringify(initialAchievements));
+            
+            if (window.navigateWithLoading) {
+              window.navigateWithLoading('index.html');
+            } else {
+              window.location.href = 'loading.html?target=index.html';
+            }
+          } else {
+            alert(data.error || 'Registration failed');
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          alert('Registration failed. Please try again.');
+        } finally {
+          // Reset button state
+          submitBtn.textContent = originalBtnText;
+          submitBtn.disabled = false;
+        }
+      });
+
+      googleBtn.addEventListener('click', () => {
+        // In a real implementation, this would use Google OAuth to access actual device accounts
+        // For demo purposes, we'll show a message explaining this
+        alert('In a real application, this would access your Google accounts logged in on this device using Google OAuth. Since this is a static demo, we\'ll simulate the process with sample data.');
+
+        // Simulate Google account selection with demo data
+        const demoEmails = [
+          'demo.user@gmail.com',
+          'sample.account@gmail.com'
+        ];
+
+        // Create a simple account selection modal
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        `;
+
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+          background: white;
+          padding: 2rem;
+          border-radius: 12px;
+          max-width: 400px;
+          width: 90%;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        `;
+
+        modalContent.innerHTML = `
+          <h3 style="margin-bottom: 0.5rem; text-align: center; color: #374151;">Choose an account</h3>
+          <p style="margin-bottom: 1rem; text-align: center; color: #6b7280; font-size: 0.8rem;">Demo - In production, this would show your actual Google accounts</p>
+          <p style="margin-bottom: 1.5rem; text-align: center; color: #6b7280; font-size: 0.9rem;">to continue to Truth Detector</p>
+          ${demoEmails.map(email => `
+            <button class="email-option" data-email="${email}" style="
+              width: 100%;
+              padding: 1rem;
+              margin-bottom: 0.5rem;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              background: white;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+              transition: background-color 0.2s;
+            ">
+              <div style="
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: #4285f4;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 0.8rem;
+              ">${email.charAt(0).toUpperCase()}</div>
+              <span style="color: #374151;">${email}</span>
+            </button>
+          `).join('')}
+          <button class="use-another-btn" style="
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            cursor: pointer;
+            font-weight: 500;
+          ">Use another account</button>
+          <button class="cancel-btn" style="
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            background: #f3f4f6;
+            color: #374151;
+            cursor: pointer;
+            font-weight: 500;
+          ">Cancel</button>
+        `;
+
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+
+        // Handle email selection
+        modalContent.addEventListener('click', (e) => {
+          if (e.target.classList.contains('email-option')) {
+            const selectedEmail = e.target.dataset.email;
+            // Simulate successful Google sign-in
+            localStorage.setItem('vn_user', JSON.stringify({
+              name: selectedEmail.split('@')[0].replace('.', ' '),
+              email: selectedEmail,
+              provider: 'google'
+            }));
+            
+            // Initialize user stats for new user
+            const initialStats = {
+              totalAnalyses: 0,
+              accuracyScore: 0,
+              currentStreak: 0,
+              lastAnalysisDate: null,
+              totalConfidence: 0
+            };
+            localStorage.setItem('vn_user_stats', JSON.stringify(initialStats));
+            
+            // Initialize achievements for new user
+            const initialAchievements = {
+              firstAnalysis: false,
+              analyst: false,
+              accuracyMaster: false,
+              streakMaster: false,
+              powerUser: false,
+              expertAnalyst: false
+            };
+            localStorage.setItem('vn_achievements', JSON.stringify(initialAchievements));
+            document.body.removeChild(modal);
+            if (window.navigateWithLoading) {
+              window.navigateWithLoading('login.html');
+            } else {
+              window.location.href = 'loading.html?target=login.html';
+            }
+          } else if (e.target.classList.contains('use-another-btn')) {
+            alert('In a real app, this would open Google OAuth flow for a different account.');
+          } else if (e.target.classList.contains('cancel-btn')) {
+            document.body.removeChild(modal);
+          }
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            document.body.removeChild(modal);
+          }
+        });
+      });
+    });
+  </script>
+  <script src="navigation-interceptor.js"></script>
+</head>
+
+<body>
+  <div class="auth-hero"
+    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 3rem 1rem; text-align:center; color:#fff;">
+    <a href="index.html" style="text-decoration: none; color: inherit;">
+      <h1 style="font-size:2rem; font-weight:800;">Join Truth Detector AI</h1>
+    </a>
+    <p style="opacity:.9;">Create your account to start detecting fake news</p>
+  </div>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <a class="nav-home" href="index.html">← Back to Home</a>
+      <h1 class="auth-title">Create your account</h1>
+      <p class="auth-sub">Join Truth Detector to verify articles with confidence</p>
+
+      <div class="auth-options">
+        <button class="google-btn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Sign up with Google
+        </button>
+        <div class="divider">
+          <span>or</span>
+        </div>
+      </div>
+
+      <form id="signupForm">
+        <div class="auth-field">
+          <label class="auth-label" for="name">Full name</label>
+          <input class="auth-input" id="name" name="name" type="text" placeholder="Alex Johnson" required />
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="email">Email</label>
+          <input class="auth-input" id="email" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="password">Password</label>
+          <input class="auth-input" id="password" name="password" type="password" placeholder="Create a password"
+            required />
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="confirm">Confirm password</label>
+          <input class="auth-input" id="confirm" name="confirm" type="password" placeholder="Re-enter password"
+            required />
+        </div>
+        <button class="auth-btn" type="submit">Create account</button>
+      </form>
+
+      <p class="auth-footer">Already have an account? <a class="auth-link" href="login.html">Login</a></p>
+    </div>
+  </div>
+</body>
+
+</html>

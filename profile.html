@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Truth Detector AI - Your Profile Dashboard">
+    <title>My Profile - Truth Detector AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -150px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            bottom: -200px;
+            left: -200px;
+            animation-delay: 7s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            top: 50%;
+            left: 50%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Main Container */
+        .profile-layout {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Card */
+        .profile-hero-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 30px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #d946ef);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+
+        .user-avatar-large {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5); }
+            50% { box-shadow: 0 20px 50px rgba(139, 92, 246, 0.8); }
+        }
+
+        .avatar-status {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            background: #10b981;
+            border-radius: 50%;
+            border: 4px solid #0f172a;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
+        }
+
+        .hero-info {
+            flex: 1;
+        }
+
+        .user-name-large {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-email-large {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        .user-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .badge-premium {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            color: #fbbf24;
+        }
+
+        .badge-verified {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            color: #3b82f6;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Modern Buttons */
+        .btn-modern {
+            padding: 0.85rem 1.75rem;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary-modern {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-danger-modern {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-danger-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6);
+        }
+
+        /* Stats Grid */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card-modern {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.8));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card-modern::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card-modern:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        }
+
+        .stat-card-modern:hover::after {
+            opacity: 1;
+        }
+
+        .stat-icon-modern {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .stat-card-modern:nth-child(1) .stat-icon-modern { animation-delay: 0s; }
+        .stat-card-modern:nth-child(2) .stat-icon-modern { animation-delay: 0.2s; }
+        .stat-card-modern:nth-child(3) .stat-icon-modern { animation-delay: 0.4s; }
+        .stat-card-modern:nth-child(4) .stat-icon-modern { animation-delay: 0.6s; }
+
+        .stat-value-modern {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label-modern {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Content Grid */
+        .content-grid-modern {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Modern Card */
+        .card-modern {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(51, 65, 85, 0.8));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-modern:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header-modern {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .card-title-modern {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Activity Timeline */
+        .timeline-modern {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .timeline-modern::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #8b5cf6, transparent);
+        }
+
+        .timeline-item-modern {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item-modern::before {
+            content: '';
+            position: absolute;
+            left: -2.15rem;
+            top: 1.5rem;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            border: 3px solid #0f172a;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.8);
+        }
+
+        .timeline-item-modern:hover {
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateX(10px);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: #f8fafc;
+            font-size: 1rem;
+        }
+
+        .timeline-badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-real {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-fake {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .timeline-meta {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        /* Achievements */
+        .achievements-grid-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .achievement-modern {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 20px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(139, 92, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .achievement-modern:hover::before {
+            left: 100%;
+        }
+
+        .achievement-modern.unlocked {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));
+            border-color: rgba(251, 191, 36, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
+        }
+
+        .achievement-modern.unlocked:hover {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        .achievement-modern.locked {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+
+        .achievement-icon-modern {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .achievement-name-modern {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 0.35rem;
+        }
+
+        .achievement-modern.unlocked .achievement-name-modern {
+            color: #fbbf24;
+        }
+
+        .achievement-desc-modern {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        /* Empty State */
+        .empty-state-modern {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .empty-icon-modern {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .empty-title-modern {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-desc-modern {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.95));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .modal-body {
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .content-grid-modern {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-layout {
+                padding: 1rem;
+            }
+
+            .profile-hero-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-left {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .user-avatar-large {
+                width: 110px;
+                height: 110px;
+                font-size: 2.5rem;
+            }
+
+            .user-name-large {
+                font-size: 2rem;
+            }
+
+            .hero-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .btn-modern {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-card-modern {
+                padding: 1.5rem 1rem;
+            }
+
+            .stat-icon-modern {
+                font-size: 2.5rem;
+            }
+
+            .stat-value-modern {
+                font-size: 2rem;
+            }
+
+            .achievements-grid-modern {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-layout {
+                padding: 0.75rem;
+            }
+
+            .profile-hero-card {
+                padding: 1.5rem 1rem;
+                border-radius: 20px;
+            }
+
+            .user-avatar-large {
+                width: 90px;
+                height: 90px;
+                font-size: 2rem;
+            }
+
+            .user-name-large {
+                font-size: 1.6rem;
+            }
+
+            .user-email-large {
+                font-size: 0.95rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .card-modern {
+                padding: 1.5rem;
+            }
+
+            .achievements-grid-modern {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-layout">
+        <!-- Hero Section -->
+        <div class="profile-hero-card">
+            <div class="hero-content">
+                <div class="hero-left">
+                    <div class="avatar-wrapper">
+                        <div class="user-avatar-large" id="userAvatar">T</div>
+                        <div class="avatar-status"></div>
+                    </div>
+                    <div class="hero-info">
+                        <h1 class="user-name-large" id="userName">Truth Seeker</h1>
+                        <p class="user-email-large" id="userEmail">seeker@truthai.com</p>
+                        <div class="user-badges">
+                            <span class="badge badge-verified">✓ Verified</span>
+                            <span class="badge badge-premium">⭐ Premium</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn-modern btn-primary-modern" id="logoutBtn">
+                        🚪 Logout
+                    </button>
+                    <button class="btn-modern btn-danger-modern" id="deleteBtn">
+                        🗑️ Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-container">
+            <div class="stat-card-modern">
+                <div class="stat-icon-modern">🔍</div>
+                <div class="stat-value-modern" id="totalAnalyses">42</div>
+                <div class="stat-label-modern">Total Analyses</div>
+            </div>
+            <div class="stat-card-modern">
+                <div class="stat-icon-modern">✅</div>
+                <div class="stat-value-modern" id="accuracyScore">94%</div>
+                <div class="stat-label-modern">Accuracy</div>
+            </div>
+            <div class="stat-card-modern">
+                <div class="stat-icon-modern">🔥</div>
+                <div class="stat-value-modern" id="currentStreak">7</div>
+                <div class="stat-label-modern">Day Streak</div>
+            </div>
+            <div class="stat-card-modern">
+                <div class="stat-icon-modern">🏆</div>
+                <div class="stat-value-modern" id="achievementsCount">4/6</div>
+                <div class="stat-label-modern">Achievements</div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid-modern">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Recent Activity -->
+                <div class="card-modern">
+                    <div class="card-header-modern">
+                        <h2 class="card-title-modern">
+                            <span>📊</span> Recent Activity
+                        </h2>
+                    </div>
+                    <div class="timeline-modern" id="activityTimeline">
+                        <div class="timeline-item-modern">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Breaking: Tech Company Announces Revolutionary AI</div>
+                                <span class="timeline-badge badge-real">REAL</span>
+                            </div>
+                            <div class="timeline-meta">
+                                📅 2 hours ago • 🎯 87% confidence
+                            </div>
+                        </div>
+                        <div class="timeline-item-modern">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Politician Makes Controversial Statement</div>
+                                <span class="timeline-badge badge-fake">FAKE</span>
+                            </div>
+                            <div class="timeline-meta">
+                                📅 5 hours ago • 🎯 92% confidence
+                            </div>
+                        </div>
+                        <div class="timeline-item-modern">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Scientific Breakthrough in Medical Research</div>
+                                <span class="timeline-badge badge-real">REAL</span>
+                            </div>
+                            <div class="timeline-meta">
+                                📅 1 day ago • 🎯 95% confidence
+                            </div>
+                        </div>
+                        <div class="timeline-item-modern">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Celebrity Scandal Rocks Entertainment Industry</div>
+                                <span class="timeline-badge badge-fake">FAKE</span>
+                            </div>
+                            <div class="timeline-meta">
+                                📅 2 days ago • 🎯 78% confidence
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar-content">
+                <!-- Achievements -->
+                <div class="card-modern">
+                    <div class="card-header-modern">
+                        <h2 class="card-title-modern">
+                            <span>🏆</span> Achievements
+                        </h2>
+                    </div>
+                    <div class="achievements-grid-modern">
+                        <div class="achievement-modern unlocked">
+                            <div class="achievement-icon-modern">🔍</div>
+                            <div class="achievement-name-modern">First Step</div>
+                            <div class="achievement-desc-modern">1 analysis</div>
+                        </div>
+                        <div class="achievement-modern unlocked">
+                            <div class="achievement-icon-modern">📈</div>
+                            <div class="achievement-name-modern">Analyst</div>
+                            <div class="achievement-desc-modern">10 analyses</div>
+                        </div>
+                        <div class="achievement-modern unlocked">
+                            <div class="achievement-icon-modern">🎯</div>
+                            <div class="achievement-name-modern">Truth Master</div>
+                            <div class="achievement-desc-modern">90% accuracy</div>
+                        </div>
+                        <div class="achievement-modern unlocked">
+                            <div class="achievement-icon-modern">🔥</div>
+                            <div class="achievement-name-modern">On Fire</div>
+                            <div class="achievement-desc-modern">7-day streak</div>
+                        </div>
+                        <div class="achievement-modern locked">
+                            <div class="achievement-icon-modern">⚡</div>
+                            <div class="achievement-name-modern">Power User</div>
+                            <div class="achievement-desc-modern">50 analyses</div>
+                        </div>
+                        <div class="achievement-modern locked">
+                            <div class="achievement-icon-modern">🏆</div>
+                            <div class="achievement-name-modern">Expert Detective</div>
+                            <div class="achievement-desc-modern">100 analyses</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">⚠️ Delete Account?</div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                <p style="margin-top: 1rem;"><strong>All your data, stats, and achievements will be permanently deleted.</strong></p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modern btn-primary-modern" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn-modern btn-danger-modern" id="confirmDeleteBtn">Delete Forever</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeProfilePage();
+        });
+
+        async function initializeProfilePage() {
+            const token = localStorage.getItem('vn_token');
+
+            // If there's no token, send user to login
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            let user = null;
+
+            // Try to read user from localStorage first
+            try {
+                const storedUser = localStorage.getItem('vn_user');
+                if (storedUser) {
+                    user = JSON.parse(storedUser);
+                }
+            } catch (e) {
+                console.error('Error reading stored user:', e);
+            }
+
+            // If we don't have a user object yet, validate token with backend
+            if (!user) {
+                try {
+                    const response = await fetch('/api/check-session', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        user = data.user;
+                        localStorage.setItem('vn_user', JSON.stringify(user));
+                    } else {
+                        // Invalid / expired token – force re-login
+                        localStorage.removeItem('vn_token');
+                        localStorage.removeItem('vn_user');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Session check error:', error);
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+
+            loadUserData(user);
+            loadUserStats();
+            loadActivityTimeline();
+            setupEventListeners();
+        }
+
+        function loadUserData(user) {
+            const name = user?.name || 'Truth Seeker';
+            const email = user?.email || 'seeker@truthai.com';
+
+            document.getElementById('userName').textContent = name;
+            document.getElementById('userEmail').textContent = email;
+            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+        }
+
+        function loadUserStats() {
+            let stats = null;
+            try {
+                const storedStats = localStorage.getItem('vn_user_stats');
+                if (storedStats) {
+                    stats = JSON.parse(storedStats);
+                }
+            } catch (e) {
+                console.error('Error reading user stats:', e);
+            }
+
+            const totalAnalyses = stats?.totalAnalyses ?? 0;
+            const accuracyScore = stats?.accuracyScore ?? 0;
+            const currentStreak = stats?.currentStreak ?? 0;
+
+            document.getElementById('totalAnalyses').textContent = totalAnalyses;
+            document.getElementById('accuracyScore').textContent = accuracyScore + '%';
+            document.getElementById('currentStreak').textContent = currentStreak;
+
+            // Achievements count from localStorage (fallback to 4/6 to match UI)
+            let achievements = null;
+            try {
+                const storedAchievements = localStorage.getItem('vn_achievements');
+                if (storedAchievements) {
+                    achievements = JSON.parse(storedAchievements);
+                }
+            } catch (e) {
+                console.error('Error reading achievements:', e);
+            }
+
+            if (achievements) {
+                const unlockedCount = Object.values(achievements).filter(Boolean).length;
+                document.getElementById('achievementsCount').textContent = unlockedCount + '/6';
+                updateAchievementsUI(achievements);
+            } else {
+                document.getElementById('achievementsCount').textContent = '0/6';
+                updateAchievementsUI(null);
+            }
+        }
+
+        function updateAchievementsUI(achievements) {
+            // Map DOM cards to achievement keys defined in simple_detect.html
+            const achievementOrder = [
+                'firstAnalysis',   // First Step
+                'analyst',         // Analyst
+                'accuracyMaster',  // Truth Master (90% accuracy)
+                'streakMaster',    // On Fire (7-day streak)
+                'powerUser',       // Power User
+                'expertAnalyst'    // Expert Detective
+            ];
+
+            const cards = document.querySelectorAll('.achievements-grid-modern .achievement-modern');
+
+            cards.forEach((card, index) => {
+                const key = achievementOrder[index];
+                const unlocked = achievements && achievements[key];
+
+                card.classList.remove('unlocked', 'locked');
+                card.classList.add(unlocked ? 'unlocked' : 'locked');
+            });
+        }
+
+        function loadActivityTimeline() {
+            const timeline = document.getElementById('activityTimeline');
+            if (!timeline) return;
+
+            let activities = [];
+            try {
+                const stored = localStorage.getItem('vn_activities');
+                activities = stored ? JSON.parse(stored) : [];
+            } catch (e) {
+                console.error('Error reading activities:', e);
+            }
+
+            timeline.innerHTML = '';
+
+            if (!activities.length) {
+                timeline.innerHTML = `
+                    <div class="timeline-item-modern">
+                        <div class="timeline-header">
+                            <div class="timeline-title">No recent activity yet</div>
+                        </div>
+                        <div class="timeline-meta">
+                            Start analyzing articles to see them appear here.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show the most recent 4 activities
+            activities.slice(0, 4).forEach(activity => {
+                const isReal = activity.result ? activity.result === 'real' : !!activity.isReal;
+                const badgeClass = isReal ? 'badge-real' : 'badge-fake';
+                const badgeText = isReal ? 'REAL' : 'FAKE';
+
+                const title = activity.title || 'Article analysis';
+                const timeLabel = activity.time || 'Just now';
+                const confidencePart = activity.confidence != null
+                    ? ` • 🎯 ${activity.confidence}% confidence`
+                    : '';
+
+                const item = document.createElement('div');
+                item.className = 'timeline-item-modern';
+                item.innerHTML = `
+                    <div class="timeline-header">
+                        <div class="timeline-title">${title}</div>
+                        <span class="timeline-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    <div class="timeline-meta">
+                        📅 ${timeLabel}${confidencePart}
+                    </div>
+                `;
+                timeline.appendChild(item);
+            });
+        }
+
+        function setupEventListeners() {
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            
+            // Delete account button
+            document.getElementById('deleteBtn').addEventListener('click', showDeleteModal);
+            document.getElementById('cancelDeleteBtn').addEventListener('click', hideDeleteModal);
+            document.getElementById('confirmDeleteBtn').addEventListener('click', handleDeleteAccount);
+            
+            // Close modal when clicking outside
+            document.getElementById('deleteModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideDeleteModal();
+                }
+            });
+        }
+
+        function handleLogout() {
+            if (!confirm('Are you sure you want to logout?')) return;
+
+            // Clear any stored data
+            localStorage.removeItem('vn_token');
+            localStorage.removeItem('vn_user');
+            // Keep stats/achievements if you want them to persist across sessions,
+            // otherwise clear everything:
+            // localStorage.clear();
+            sessionStorage.clear();
+
+            alert('You have been successfully logged out!');
+            window.location.href = 'login.html';
+        }
+
+        function showDeleteModal() {
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+        }
+
+        async function handleDeleteAccount() {
+            const confirmed = confirm('Are you sure you want to permanently delete your account?');
+            if (!confirmed) return;
+
+            const token = localStorage.getItem('vn_token');
+            if (!token) {
+                alert('You are not logged in.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/delete-account', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    alert(data.message || 'Your account has been permanently deleted.');
+                    window.location.href = 'index.html';
+                } else {
+                    alert(data.error || 'Failed to delete account. Please try again.');
+                }
+            } catch (error) {
+                console.error('Delete account error:', error);
+                alert('Failed to delete account. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

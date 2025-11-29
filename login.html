@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="Screenshot 2025-10-22 140606.png" />
+  <title>Login - Truth Detector AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Login page specific styles - enhanced styles in styles.css */
+    body {
+      animation: pageFadeIn 0.6s ease-out;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      min-height: 100vh;
+    }
+    
+    .password-wrapper .auth-input {
+      padding-right: 3.5rem;
+    }
+    
+    .auth-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check if user is already logged in
+      const token = localStorage.getItem('vn_token');
+      if (token) {
+        try {
+          const response = await fetch('/api/check-session', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (response.ok) {
+            // User is already logged in, redirect to home
+            if (window.navigateWithLoading) {
+              window.navigateWithLoading('index.html');
+            } else {
+              window.location.href = 'loading.html?target=index.html';
+            }
+            return;
+          } else {
+            // Token invalid, clear it
+            localStorage.removeItem('vn_token');
+            localStorage.removeItem('vn_user');
+          }
+        } catch (error) {
+          console.error('Session check error:', error);
+          // Clear invalid token
+          localStorage.removeItem('vn_token');
+          localStorage.removeItem('vn_user');
+        }
+      }
+
+      // Auto-fill email from localStorage
+      const savedEmail = localStorage.getItem('vn_email');
+      if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+      }
+
+      // Password toggle functionality
+      const passwordInput = document.getElementById('password');
+      const passwordToggle = document.getElementById('passwordToggle');
+      const toggleIcon = document.getElementById('toggleIcon');
+
+      passwordToggle.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle icon
+        if (type === 'text') {
+          toggleIcon.textContent = '🙈';
+          toggleIcon.setAttribute('aria-label', 'Hide password');
+        } else {
+          toggleIcon.textContent = '👁️';
+          toggleIcon.setAttribute('aria-label', 'Show password');
+        }
+      });
+
+      const form = document.getElementById('loginForm');
+      const submitBtn = document.querySelector('.auth-btn');
+      const originalBtnText = submitBtn.textContent;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        if (!email || !password) { alert('Please fill in all fields.'); return; }
+
+        // Show loading state
+        submitBtn.textContent = 'Logging in...';
+        submitBtn.disabled = true;
+
+        try {
+          const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // If a different user logs in, clear previous per-user data
+            try {
+              const existingUserRaw = localStorage.getItem('vn_user');
+              if (existingUserRaw) {
+                const existingUser = JSON.parse(existingUserRaw);
+                if (existingUser.email && existingUser.email !== data.user.email) {
+                  localStorage.removeItem('vn_user_stats');
+                  localStorage.removeItem('vn_achievements');
+                  localStorage.removeItem('vn_activities');
+                }
+              }
+            } catch (e) {
+              console.error('Error checking existing user:', e);
+            }
+
+            // Store token and email in localStorage
+            localStorage.setItem('vn_token', data.token);
+            localStorage.setItem('vn_email', email);
+            localStorage.setItem('vn_user', JSON.stringify(data.user));
+            
+            // Initialize user stats if they don't exist
+            if (!localStorage.getItem('vn_user_stats')) {
+              const initialStats = {
+                totalAnalyses: 0,
+                accuracyScore: 0,
+                currentStreak: 0,
+                lastAnalysisDate: null,
+                totalConfidence: 0
+              };
+              localStorage.setItem('vn_user_stats', JSON.stringify(initialStats));
+            }
+            
+            // Initialize achievements if they don't exist
+            if (!localStorage.getItem('vn_achievements')) {
+              const initialAchievements = {
+                firstAnalysis: false,
+                analyst: false,
+                accuracyMaster: false,
+                streakMaster: false,
+                powerUser: false,
+                expertAnalyst: false
+              };
+              localStorage.setItem('vn_achievements', JSON.stringify(initialAchievements));
+            }
+            
+            if (window.navigateWithLoading) {
+              window.navigateWithLoading('index.html');
+            } else {
+              window.location.href = 'loading.html?target=index.html';
+            }
+          } else {
+            alert(data.error || 'Login failed');
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          alert('Login failed. Please try again.');
+        } finally {
+          // Reset button state
+          submitBtn.textContent = originalBtnText;
+          submitBtn.disabled = false;
+        }
+      });
+    });
+  </script>
+  <script src="navigation-interceptor.js"></script>
+</head>
+
+<body>
+  <div class="auth-hero"
+    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 3rem 1rem; text-align:center; color:#fff;">
+    <a href="index.html" style="text-decoration: none; color: inherit;">
+      <h1 style="font-size:2rem; font-weight:800;">Welcome back to Truth Detector AI</h1>
+    </a>
+    <p style="opacity:.9;">Sign in to analyze articles with AI precision</p>
+  </div>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <a class="nav-home" href="index.html">← Back to Home</a>
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-sub">Login to continue to Truth Detector AI</p>
+
+      <form id="loginForm">
+        <div class="auth-field">
+          <label class="auth-label" for="email">Email</label>
+          <input class="auth-input" id="email" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="password">Password</label>
+          <div class="password-wrapper">
+            <input class="auth-input" id="password" name="password" type="password" placeholder="Your password"
+              required />
+            <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
+              <span id="toggleIcon">👁️</span>
+            </button>
+          </div>
+        </div>
+        <div class="auth-actions">
+          <div class="auth-links">
+            <a class="auth-link" href="forgot.html">Forgot password?</a>
+            <a class="auth-link" href="signup.html">Create account</a>
+          </div>
+        </div>
+        <button class="auth-btn" type="submit">Login</button>
+      </form>
+
+      <p class="auth-footer">By continuing you agree to our Terms & Privacy.</p>
+    </div>
+  </div>
+</body>
+
+</html>

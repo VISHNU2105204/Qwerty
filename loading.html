@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Screenshot 2025-10-22 140606.png" />
+    <title>Loading...</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .loading-container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-container {
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .logo-container img {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .spinner-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+        }
+
+        .spinner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top: 5px solid white;
+            border-right: 5px solid white;
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner-inner {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: calc(100% - 20px);
+            height: calc(100% - 20px);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-bottom: 3px solid white;
+            border-left: 3px solid white;
+            animation: spinReverse 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spinReverse {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .loading-text {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                text-shadow: 0 2px 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        .loading-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .progress-bar-container {
+            width: 300px;
+            max-width: 90%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 0 auto;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.8));
+            border-radius: 10px;
+            width: 0%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transition: width 0.1s linear;
+        }
+
+        .speed-indicator {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            margin: 0 3px;
+            animation: dotBounce 1.4s ease-in-out infinite;
+        }
+
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dotBounce {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .loading-text {
+                font-size: 1.5rem;
+            }
+
+            .loading-subtitle {
+                font-size: 1rem;
+            }
+
+            .spinner-container {
+                width: 100px;
+                height: 100px;
+            }
+
+            .logo-container img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="loading-container">
+        <div class="logo-container">
+            <img src="Screenshot 2025-10-22 140606.png" alt="Truth Detector Logo">
+        </div>
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <div class="spinner-inner"></div>
+        </div>
+        <h1 class="loading-text">
+            Loading
+            <span class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </h1>
+        <p class="loading-subtitle">Please wait while we redirect you</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p class="speed-indicator" id="speedIndicator"></p>
+    </div>
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Get the target page from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        let target = urlParams.get('target') || 'index.html';
+        
+        // Remove cache-busting parameters if present
+        if (target.includes('&')) {
+            target = target.split('&')[0];
+        }
+
+        // Internet speed detection and adaptive loading duration
+        async function measureInternetSpeed() {
+            const minDuration = 1500; // Minimum 1.5 seconds
+            const maxDuration = 5000; // Maximum 5 seconds for slow connections
+            const defaultDuration = 2500; // Default 2.5 seconds
+            
+            let duration = defaultDuration;
+            let speedMbps = 0;
+            let speedLabel = 'Normal';
+
+            try {
+                // Method 1: Use Network Information API if available
+                if ('connection' in navigator) {
+                    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                    if (connection) {
+                        const effectiveType = connection.effectiveType;
+                        const downlink = connection.downlink || 0; // Mbps
+                        
+                        if (downlink > 0) {
+                            speedMbps = downlink;
+                            // Adjust duration based on effective connection type
+                            switch (effectiveType) {
+                                case 'slow-2g':
+                                    duration = maxDuration;
+                                    speedLabel = 'Very Slow (2G)';
+                                    break;
+                                case '2g':
+                                    duration = 4500;
+                                    speedLabel = 'Slow (2G)';
+                                    break;
+                                case '3g':
+                                    duration = 3500;
+                                    speedLabel = 'Moderate (3G)';
+                                    break;
+                                case '4g':
+                                    duration = downlink > 10 ? minDuration : 2000;
+                                    speedLabel = downlink > 10 ? 'Fast (4G)' : 'Good (4G)';
+                                    break;
+                                default:
+                                    duration = defaultDuration;
+                                    speedLabel = 'Normal';
+                            }
+                            
+                            // Fine-tune based on actual downlink speed
+                            if (downlink < 0.5) {
+                                duration = maxDuration;
+                            } else if (downlink < 1.5) {
+                                duration = 4500;
+                            } else if (downlink < 3) {
+                                duration = 3500;
+                            } else if (downlink < 10) {
+                                duration = 2500;
+                            } else {
+                                duration = minDuration;
+                            }
+                        }
+                    }
+                }
+
+                // Method 2: Measure actual download speed by fetching a small resource
+                if (duration === defaultDuration || speedMbps === 0) {
+                    const testSize = 50 * 1024; // 50KB test file
+                    const testUrl = 'Screenshot 2025-10-22 140606.png'; // Use logo as test resource
+                    
+                    const startTime = performance.now();
+                    
+                    try {
+                        const response = await fetch(testUrl + '?t=' + Date.now(), {
+                            method: 'HEAD',
+                            cache: 'no-cache'
+                        });
+                        
+                        // If HEAD fails, try GET with limited data
+                        if (!response.ok) {
+                            const fullResponse = await fetch(testUrl + '?t=' + Date.now(), {
+                                cache: 'no-cache'
+                            });
+                            const blob = await fullResponse.blob();
+                            const endTime = performance.now();
+                            const durationMs = endTime - startTime;
+                            const loadedBytes = blob.size;
+                            
+                            if (durationMs > 0 && loadedBytes > 0) {
+                                const speedBps = (loadedBytes * 8) / (durationMs / 1000); // bits per second
+                                speedMbps = speedBps / (1024 * 1024); // Convert to Mbps
+                                
+                                // Adjust duration based on measured speed
+                                if (speedMbps < 0.5) {
+                                    duration = maxDuration;
+                                    speedLabel = 'Very Slow';
+                                } else if (speedMbps < 1.5) {
+                                    duration = 4500;
+                                    speedLabel = 'Slow';
+                                } else if (speedMbps < 3) {
+                                    duration = 3500;
+                                    speedLabel = 'Moderate';
+                                } else if (speedMbps < 10) {
+                                    duration = 2500;
+                                    speedLabel = 'Good';
+                                } else {
+                                    duration = minDuration;
+                                    speedLabel = 'Fast';
+                                }
+                            }
+                        } else {
+                            // For HEAD request, estimate based on response time
+                            const endTime = performance.now();
+                            const durationMs = endTime - startTime;
+                            
+                            if (durationMs > 2000) {
+                                duration = maxDuration;
+                                speedLabel = 'Slow Connection';
+                            } else if (durationMs > 1000) {
+                                duration = 3500;
+                                speedLabel = 'Moderate Connection';
+                            } else {
+                                duration = minDuration;
+                                speedLabel = 'Fast Connection';
+                            }
+                        }
+                    } catch (error) {
+                        // If speed test fails, use default duration
+                        console.log('Speed test failed, using default duration');
+                        duration = defaultDuration;
+                        speedLabel = 'Checking...';
+                    }
+                }
+
+                // Fallback: Use timeout-based estimation if both methods fail
+                if (duration === defaultDuration && speedMbps === 0) {
+                    const startTime = performance.now();
+                    // Quick fetch to estimate connection
+                    try {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+                        
+                        await fetch(window.location.origin + '?t=' + Date.now(), {
+                            method: 'HEAD',
+                            cache: 'no-cache',
+                            signal: controller.signal
+                        });
+                        
+                        clearTimeout(timeoutId);
+                        const endTime = performance.now();
+                        const responseTime = endTime - startTime;
+                        
+                        if (responseTime > 1500) {
+                            duration = maxDuration;
+                            speedLabel = 'Slow Connection';
+                        } else if (responseTime > 800) {
+                            duration = 3500;
+                            speedLabel = 'Moderate Connection';
+                        } else {
+                            duration = minDuration;
+                            speedLabel = 'Fast Connection';
+                        }
+                    } catch (error) {
+                        // If timeout or error, assume slow connection
+                        if (error.name === 'AbortError') {
+                            duration = maxDuration;
+                            speedLabel = 'Slow Connection';
+                        } else {
+                            // Use default if all methods fail
+                            duration = defaultDuration;
+                            speedLabel = 'Normal';
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.log('Speed detection error:', error);
+                duration = defaultDuration;
+                speedLabel = 'Normal';
+            }
+
+            // Ensure duration is within bounds
+            duration = Math.max(minDuration, Math.min(maxDuration, duration));
+            
+            return { duration, speedLabel, speedMbps };
+        }
+
+        // Initialize loading with adaptive duration
+        async function startAdaptiveLoading() {
+            const speedInfo = await measureInternetSpeed();
+            const { duration, speedLabel, speedMbps } = speedInfo;
+            
+            // Update speed indicator
+            const speedIndicator = document.getElementById('speedIndicator');
+            if (speedIndicator) {
+                if (speedMbps > 0) {
+                    speedIndicator.textContent = `Connection: ${speedLabel} (${speedMbps.toFixed(2)} Mbps)`;
+                } else {
+                    speedIndicator.textContent = `Connection: ${speedLabel}`;
+                }
+            }
+            
+            // Update progress bar animation duration
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.style.transition = `width ${duration}ms linear`;
+                progressBar.style.width = '0%';
+                
+                // Trigger animation
+                setTimeout(() => {
+                    progressBar.style.width = '100%';
+                }, 100);
+            }
+            
+            // Redirect after calculated duration
+            setTimeout(() => {
+                // Add fade out effect
+                document.body.style.transition = 'opacity 0.5s ease-out';
+                document.body.style.opacity = '0';
+                
+                setTimeout(() => {
+                    window.location.href = target;
+                }, 500);
+            }, duration);
+        }
+
+        // Start adaptive loading
+        startAdaptiveLoading();
+    </script>
+</body>
+</html>

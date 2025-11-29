@@ -1,0 +1,13 @@
+joblib
+requests
+beautifulsoup4
+pytesseract
+Pillow
+streamlit
+scikit-learn
+langdetect
+deep-translator
+pandas
+numpy
+scipy
+
